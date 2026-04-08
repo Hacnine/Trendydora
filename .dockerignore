@@ -1,0 +1,22 @@
+node_modules
+frontend/node_modules
+backend/node_modules
+scripts/node_modules
+backend/dist
+.git
+.github
+.vscode
+backups
+docs
+*.log
+.env*
+
+# Old Express.js files (after NestJS migration)
+backend/app.js
+backend/controllers/
+backend/routes/
+backend/middlewares/
+backend/sockets/
+backend/utils/
+backend/modules/
+backend/config/

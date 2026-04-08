@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Shield, Truck, RotateCcw } from 'lucide-react';
 import { useGetFeaturedProductsQuery } from '../features/products/productsApi';
@@ -5,6 +6,7 @@ import { useGetCategoriesQuery } from '../features/categories/categoriesApi';
 import { ProductCard } from '../components/ProductCard';
 import { ProductCardSkeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
+import heroImage from '../assets/hero.png';
 
 const perks = [
   { icon: Truck, title: 'Free shipping', desc: 'On orders over $50' },
@@ -12,21 +14,67 @@ const perks = [
   { icon: Shield, title: 'Secure checkout', desc: 'SSL encrypted payments' },
 ];
 
+const heroSlides = [
+  {
+    title: 'Discover your next favourite thing',
+    description: 'Thousands of products, curated for you. Shop the latest trends with confidence.',
+    cta: '/products',
+    image: heroImage,
+  },
+  {
+    title: 'Fresh arrivals every week',
+    description: 'Stay ahead of the trends with our newest collection.',
+    cta: '/products',
+    image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1600&q=80',
+  },
+  {
+    title: 'Curated style for every occasion',
+    description: 'Find effortless looks crafted for comfort and confidence.',
+    cta: '/products',
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1600&q=80',
+  },
+];
+
 export function HomePage() {
+  const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const { data: featuredData, isLoading: loadingFeatured } = useGetFeaturedProductsQuery(8);
   const { data: categories, isLoading: loadingCats } = useGetCategoriesQuery();
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveHeroIndex((current) => (current + 1) % heroSlides.length);
+    }, 6000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <section className="relative overflow-hidden text-white">
+        <div className="absolute inset-0">
+          {heroSlides.map((slide, index) => (
+            <div
+              key={slide.title}
+              className={`absolute inset-0 transition-opacity duration-700 ease-out ${index === activeHeroIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            >
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/40" />
+            </div>
+          ))}
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="max-w-2xl">
             <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-              Discover <br /> your next<br /> favourite thing
+              {heroSlides[activeHeroIndex].title}
             </h1>
             <p className="text-indigo-100 text-lg mb-8">
-              Thousands of products, curated for you. Shop the latest trends with confidence.
+              {heroSlides[activeHeroIndex].description}
             </p>
             <div className="flex gap-4 flex-wrap">
               <Button
@@ -34,14 +82,22 @@ export function HomePage() {
                 size="lg"
                 className="bg-white text-indigo-600 hover:bg-indigo-50 font-semibold"
               >
-                <Link to="/products">Shop now <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
+                <Link to={heroSlides[activeHeroIndex].cta}>Shop now <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
               </Button>
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
-          <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-purple-400 blur-3xl" />
-          <div className="absolute bottom-0 left-1/2 w-64 h-64 rounded-full bg-indigo-300 blur-2xl" />
+
+        <div className="absolute inset-x-0 bottom-8 flex justify-center gap-3 z-10">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              aria-label={`Go to slide ${index + 1}`}
+              onClick={() => setActiveHeroIndex(index)}
+              className={`h-3 w-3 rounded-full transition-colors ${index === activeHeroIndex ? 'bg-white' : 'bg-white/40 hover:bg-white'}`}
+            />
+          ))}
         </div>
       </section>
 
