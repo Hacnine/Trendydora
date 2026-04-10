@@ -18,7 +18,7 @@ COPY backend/package.json ./backend/
 COPY package.json ./
 
 # Install dependencies for backend workspace only
-RUN pnpm install --filter backend
+RUN pnpm install --filter backend && echo "✓ pnpm install succeeded"
 
 # Copy backend source code
 COPY backend/ ./backend/
@@ -30,10 +30,10 @@ WORKDIR /app/backend
 ARG DATABASE_URL="postgresql://trendora:trendora@localhost:5432/trendora"
 
 # Generate Prisma client (does not require a live DB for generation)
-RUN npx prisma generate
+RUN npx prisma generate && echo "✓ prisma generate succeeded"
 
 # Build NestJS application
-RUN pnpm run build
+RUN pnpm run build && echo "✓ pnpm build succeeded" || (echo "Build failed" && exit 1)
 
 EXPOSE 3001
 
