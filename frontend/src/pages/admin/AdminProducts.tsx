@@ -76,10 +76,21 @@ export function AdminProducts() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const url = await uploadImage(formData).unwrap();
-      setImageUrls((prev) => [...prev, url]);
-    } catch {
-      toast.error('Upload failed');
+      console.log('Uploading file:', file.name, file.size);
+      const response = await uploadImage(formData).unwrap();
+      console.log('Upload response:', response);
+      // Extract URL from response
+      const url = typeof response === 'string' ? response : response?.secure_url;
+      if (url && typeof url === 'string') {
+        setImageUrls((prev) => [...prev, url]);
+        toast.success('Image uploaded');
+      } else {
+        console.error('Invalid URL response:', response);
+        toast.error('Upload failed: Invalid response');
+      }
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast.error(error?.data?.message || 'Upload failed');
     } finally {
       setUploading(false);
     }

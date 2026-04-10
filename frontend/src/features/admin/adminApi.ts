@@ -19,6 +19,13 @@ export const adminApi = baseApi.injectEndpoints({
         method: 'POST',
         body: formData,
       }),
+      transformResponse: (response: { secure_url: string } | string) => {
+        // Handle both formats: object with secure_url or plain string
+        if (typeof response === 'string') {
+          return response;
+        }
+        return response?.secure_url || '';
+      },
     }),
   }),
 });

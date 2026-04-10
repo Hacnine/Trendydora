@@ -72,12 +72,22 @@ export function ProfilePage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const url = await uploadImage(formData).unwrap();
-      await updateProfile({ avatar: url }).unwrap();
-      dispatch(updateUser({ avatar: url }));
-      toast.success('Avatar updated');
-    } catch {
-      toast.error('Could not upload avatar');
+      console.log('Uploading avatar:', file.name, file.size);
+      const response = await uploadImage(formData).unwrap();
+      console.log('Upload response:', response);
+      // Extract URL from response
+      const url = typeof response === 'string' ? response : response?.secure_url;
+      if (url && typeof url === 'string') {
+        await updateProfile({ avatar: url }).unwrap();
+        dispatch(updateUser({ avatar: url }));
+        toast.success('Avatar updated');
+      } else {
+        console.error('Invalid URL response:', response);
+        toast.error('Could not upload avatar: Invalid response');
+      }
+    } catch (error: any) {
+      console.error('Avatar upload error:', error);
+      toast.error(error?.data?.message || 'Could not upload avatar');
     } finally {
       setAvatarUploading(false);
     }
