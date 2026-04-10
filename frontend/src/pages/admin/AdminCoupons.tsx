@@ -38,7 +38,7 @@ export function AdminCoupons() {
   const [deleteCoupon] = useDeleteCouponMutation();
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
   });
 
   const openCreate = () => {

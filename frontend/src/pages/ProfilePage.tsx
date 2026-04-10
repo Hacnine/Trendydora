@@ -76,7 +76,7 @@ export function ProfilePage() {
       console.log('Upload response:', url);
       if (url && typeof url === 'string') {
         await updateProfile({ avatar: url }).unwrap();
-        dispatch(updateUser({ avatar: url }));
+        dispatch(updateUser({ avatar: url } as any));
         toast.success('Avatar updated');
       } else {
         console.error('Invalid URL response:', url);
