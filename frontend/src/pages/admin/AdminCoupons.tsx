@@ -19,9 +19,9 @@ import type { Coupon } from '../../types';
 const schema = z.object({
   code: z.string().optional(),
   discountType: z.enum(['PERCENTAGE', 'FIXED']).optional(),
-  discount: z.coerce.number().positive().optional().or(z.literal('')),
-  minOrder: z.coerce.number().min(0).optional().or(z.literal('')),
-  maxUses: z.coerce.number().int().min(1).optional().or(z.literal('')),
+  discount: z.union([z.coerce.number().positive(), z.literal('')]).optional(),
+  minOrder: z.union([z.coerce.number().min(0), z.literal('')]).optional(),
+  maxUses: z.union([z.coerce.number().int().min(1), z.literal('')]).optional(),
   expiresAt: z.string().optional(),
   description: z.string().optional(),
   isActive: z.boolean().optional(),

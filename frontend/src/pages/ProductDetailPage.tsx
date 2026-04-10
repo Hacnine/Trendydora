@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, Star, ChevronLeft } from 'lucide-react';
+import { ShoppingCart, Heart, ChevronLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useGetProductBySlugQuery } from '../features/products/productsApi';
 import { useGetProductReviewsQuery, useCreateReviewMutation } from '../features/reviews/reviewsApi';
@@ -205,9 +205,9 @@ export function ProductDetailPage() {
       {/* Reviews */}
       <div className="mt-16">
         <h2 className="text-2xl font-bold text-gray-900 mb-8">Reviews</h2>
-        {reviews && reviews.length > 0 ? (
+        {reviews && reviews.reviews && reviews.reviews.length > 0 ? (
           <div className="space-y-6 mb-12">
-            {reviews.map((review) => (
+            {reviews.reviews.map((review) => (
               <div key={review.id} className="bg-white border border-gray-100 rounded-2xl p-6">
                 <div className="flex items-start justify-between mb-2">
                   <div>

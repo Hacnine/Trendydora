@@ -21,9 +21,9 @@ import type { Product } from '../../types';
 const schema = z.object({
   name: z.string().min(2),
   description: z.string().min(10),
-  price: z.coerce.number().positive(),
-  comparePrice: z.coerce.number().positive().optional().or(z.literal('')),
-  stock: z.coerce.number().int().min(0),
+  price: z.union([z.coerce.number().positive(), z.literal('')]),
+  comparePrice: z.union([z.coerce.number().positive(), z.literal('')]).optional(),
+  stock: z.union([z.coerce.number().int().min(0), z.literal('')]),
   categoryId: z.string().min(1, 'Select a category'),
   tags: z.string().optional(),
 });
@@ -77,15 +77,13 @@ export function AdminProducts() {
       const formData = new FormData();
       formData.append('file', file);
       console.log('Uploading file:', file.name, file.size);
-      const response = await uploadImage(formData).unwrap();
-      console.log('Upload response:', response);
-      // Extract URL from response
-      const url = typeof response === 'string' ? response : response?.secure_url;
+      const url = await uploadImage(formData).unwrap();
+      console.log('Upload response:', url);
       if (url && typeof url === 'string') {
         setImageUrls((prev) => [...prev, url]);
         toast.success('Image uploaded');
       } else {
-        console.error('Invalid URL response:', response);
+        console.error('Invalid URL response:', url);
         toast.error('Upload failed: Invalid response');
       }
     } catch (error: any) {

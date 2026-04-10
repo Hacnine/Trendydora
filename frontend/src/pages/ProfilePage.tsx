@@ -37,7 +37,6 @@ export function ProfilePage() {
 
   const {
     register: regProfile, handleSubmit: handleProfile, formState: { errors: pErrors },
-    reset: resetProfile,
   } = useForm<ProfileForm>({ resolver: zodResolver(profileSchema), defaultValues: { name: profile?.name ?? '' } });
 
   const {
@@ -73,16 +72,14 @@ export function ProfilePage() {
       const formData = new FormData();
       formData.append('file', file);
       console.log('Uploading avatar:', file.name, file.size);
-      const response = await uploadImage(formData).unwrap();
-      console.log('Upload response:', response);
-      // Extract URL from response
-      const url = typeof response === 'string' ? response : response?.secure_url;
+      const url = await uploadImage(formData).unwrap();
+      console.log('Upload response:', url);
       if (url && typeof url === 'string') {
         await updateProfile({ avatar: url }).unwrap();
         dispatch(updateUser({ avatar: url }));
         toast.success('Avatar updated');
       } else {
-        console.error('Invalid URL response:', response);
+        console.error('Invalid URL response:', url);
         toast.error('Could not upload avatar: Invalid response');
       }
     } catch (error: any) {

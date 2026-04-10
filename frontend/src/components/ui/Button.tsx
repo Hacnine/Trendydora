@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef, cloneElement, isValidElement, Children, ReactElement } from 'react';
+import { type ButtonHTMLAttributes, forwardRef, cloneElement, isValidElement, Children, type ReactElement } from 'react';
 import { cn } from '../../utils';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
