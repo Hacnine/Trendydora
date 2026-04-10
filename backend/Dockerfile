@@ -13,11 +13,12 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Copy workspace files
-COPY pnpm-lock.yaml pnpm-workspace.yaml .pnpmrc* ./
+COPY pnpm-workspace.yaml .pnpmrc* ./
 COPY backend/package.json ./backend/
+COPY package.json ./
 
 # Install dependencies for backend workspace only
-RUN pnpm install --frozen-lockfile --filter backend
+RUN pnpm install --filter backend
 
 # Copy backend source code
 COPY backend/ ./backend/

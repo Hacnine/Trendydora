@@ -11,11 +11,12 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 # Copy workspace files
-COPY pnpm-lock.yaml pnpm-workspace.yaml .pnpmrc* ./
+COPY pnpm-workspace.yaml .pnpmrc* ./
 COPY frontend/package.json ./frontend/
+COPY package.json ./
 
 # Install dependencies for frontend workspace only
-RUN pnpm install --frozen-lockfile --filter frontend
+RUN pnpm install --filter frontend
 
 # Copy frontend source code
 COPY frontend/ ./frontend/
