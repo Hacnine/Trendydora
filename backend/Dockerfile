@@ -21,12 +21,12 @@ ARG DATABASE_URL="postgresql://trendora:trendora@localhost:5432/trendora"
 RUN npx prisma generate
 
 # Build NestJS application and verify output
-RUN npm run build && ls -la dist/ && test -f dist/main.js
+RUN npm run build && ls -la dist/src/ && test -f dist/src/main.js
 
 EXPOSE 3001
 
 # Start production server
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
 
 EXPOSE 3001
 
