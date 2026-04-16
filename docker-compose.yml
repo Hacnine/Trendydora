@@ -38,11 +38,11 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/api"]
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 30s
     networks:
       - trendora-network
 
@@ -59,8 +59,6 @@ services:
       - "80"
     environment:
       DOCKER_PAT: ${DOCKER_PAT}
-    depends_on:
-      - backend
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/"]
       interval: 10s
