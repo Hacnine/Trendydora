@@ -35,5 +35,5 @@ RUN pnpm run build && ls -la dist/src/ && test -f dist/src/main.js
 
 EXPOSE 3001
 
-# Start production server
-CMD ["node", "dist/src/main"]
+# Run migrations then start production server
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]

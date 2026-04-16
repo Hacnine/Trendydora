@@ -13,6 +13,9 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
 
+  // Global prefix — all routes are under /api (nginx strips /api/ before forwarding)
+  app.setGlobalPrefix('api');
+
   // CORS
   app.enableCors({
     origin: process.env.CLIENT_URL
@@ -38,7 +41,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
